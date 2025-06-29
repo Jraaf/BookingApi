@@ -3,23 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Data.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.User;
 
 public class UserRepository : IUserRepository
 {
-    public Task<bool> Create(UserDao user)
+    private readonly RoomsContext _context;
+
+    public UserRepository(RoomsContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
+    }
+    public async Task<bool> Create(User user)
+    {
+        _context.Users.Add(user);
+        return (await _context.SaveChangesAsync()) > 0;
     }
 
-    public Task<bool> Exists(string Username)
+    public async Task<bool> Exists(string Username)
     {
-        throw new NotImplementedException();
+        return await _context.Users.AnyAsync(u => u.Username == Username);
     }
 
-    public Task<UserDao> GetByName(string username)
+    public async Task<User?> GetByName(string username)
     {
-        throw new NotImplementedException();
+        return await _context.Users
+            .Where(u => u.Username == username)
+            .FirstOrDefaultAsync();
     }
 }

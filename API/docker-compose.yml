@@ -1,0 +1,30 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: API/Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Database=Rooms;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;Encrypt=False;
+      - TokenKey=vkasfbdvlkascnklSfcgacnl;sdobcla;sdkasjkd,bva;skdbv;'OaisdhjgAFSXCashvcjkADCJHGASDK'ASDFavkASGkdck
+    networks:
+      - app-network
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql_server
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourStrong!Passw0rd
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    networks:
+      - app-network
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+
+volumes:
+  sqlserver_data:
+
+networks:
+  app-network:

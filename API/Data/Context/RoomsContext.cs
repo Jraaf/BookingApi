@@ -10,7 +10,7 @@ public class RoomsContext : DbContext
     public RoomsContext(DbContextOptions<RoomsContext> options) : base(options)
     {
     }
-    public DbSet<RoomDao> Rooms { get; set; }
-    public DbSet<BookingDao> Bookings { get; set; }
-    public DbSet<UserDao> Users { get; set; }
+    public DbSet<Room.Room> Rooms { get; set; }
+    public DbSet<Booking.Booking> Bookings { get; set; }
+    public DbSet<User.User> Users { get; set; }
 }

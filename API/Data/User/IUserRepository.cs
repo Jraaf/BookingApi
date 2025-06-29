@@ -8,7 +8,7 @@ namespace Data.User;
 
 public interface IUserRepository
 {
-    Task<bool> Create(UserDao user);
-    Task<UserDao> GetByName(string username);
+    Task<bool> Create(User user);
+    Task<User?> GetByName(string username);
     Task<bool> Exists(string Username);
 }

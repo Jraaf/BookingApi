@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.User;
+namespace API.User;
 
-public class UserDto
+public class OutputUserDto
 {
-    public int Id { get; set; }
     public string Username { get; set; }
-    public string Password { get; set; }
+    public string AccessToken { get; set; }
 }

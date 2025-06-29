@@ -1,8 +1,6 @@
-﻿using Services.Booking;
+﻿namespace API.Room;
 
-namespace Services.Room;
-
-public class RoomDto
+public class OutputRoomDto
 {
     public int Id { get; set; }
     public string Name { get; set; }

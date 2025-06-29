@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using API.User;
 using AutoMapper;
 using Data.User;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Services.Exceptions;
 
 namespace Services.User;
@@ -15,18 +14,43 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _repo;
     private readonly IMapper _mapper;
+    private readonly IConfiguration _config;
 
-    public UserService(IUserRepository repo, IMapper mapper)
+    public UserService(IUserRepository repo, IMapper mapper, IConfiguration config)
     {
         _repo = repo;
         _mapper = mapper;
-    }
-    public string CreateToken(UserDto user)
-    {
-        throw new NotImplementedException();
+        _config = config;
     }
 
-    public async Task<UserDto> Login(LoginUserDto dto)
+    public string CreateToken(UserDto user)
+    {
+        var tokenKey = _config["TokenKey"] ?? throw new Exception("Cannot access token key");
+        if (tokenKey.Length < 64) throw new Exception("Too short key");
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
+
+        var claims = new List<Claim>
+        {
+            new (ClaimTypes.NameIdentifier, user.Username)
+        };
+
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.UtcNow.AddDays(1),
+            SigningCredentials = credentials
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+
+        return tokenHandler.WriteToken(token);
+    }
+
+    public async Task<string> Login(UserDto dto)
     {
         var user = await _repo.GetByName(dto.Username);
 
@@ -42,19 +66,29 @@ public class UserService : IUserService
         for (int i = 0; i < computedHash.Length; i++)
         {
             if (computedHash[i] != user.PasswordHash[i])
-                throw new Exception("Wrong password");
+                throw new  Exception("Invalid credentials");
         }
-        var endUser = new UserDto()
-        {
-            Id = user.Id,
-            Username = user.Username,
-            AccessToken = CreateToken(user),
-        };
-        return endUser;
+
+        return CreateToken(dto);
     }
 
-    public Task<UserDto> Register(RegisterUserDto user)
+    public async Task<bool> Register(UserDto dto)
     {
-        throw new NotImplementedException();
+        var user = await _repo.GetByName(dto.Username);
+
+        if (user != null)
+        {
+            throw new UserExistsException(dto.Username);
+        }
+        using var hmac = new HMACSHA512();
+
+        var userDao = new Data.User.User()
+        {
+            Username = dto.Username,
+            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password)),
+            PasswordSalt = hmac.Key
+        };        
+
+        return await _repo.Create(userDao);
     }
 }

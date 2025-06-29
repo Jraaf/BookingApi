@@ -7,11 +7,11 @@ using Data.Booking;
 
 namespace Data.User;
 
-public class UserDao
+public class User
 {
     public int Id { get; set; }
     public string Username { get; set; }
     public byte[] PasswordHash { get; set; }
     public byte[] PasswordSalt { get; set; }
-    public ICollection<BookingDao> Bookings { get; set; }
+    public ICollection<Booking.Booking> Bookings { get; set; }
 }

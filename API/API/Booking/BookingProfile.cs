@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 
-namespace Services.User
+namespace API.Booking;
+
+public class BookingProfile : Profile
 {
-    internal class UserProfile
+    public BookingProfile()
     {
+
     }
 }

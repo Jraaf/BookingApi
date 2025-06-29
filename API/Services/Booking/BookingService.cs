@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.Booking
+namespace Services.Booking;
+
+public class BookingService : IBookingService
 {
-    internal class BookingService
-    {
-    }
 }

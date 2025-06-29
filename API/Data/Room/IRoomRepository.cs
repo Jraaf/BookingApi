@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data.Room
+namespace Data.Room;
+
+public interface IRoomRepository
 {
-    internal interface IRoomRepository
-    {
-    }
+    Task<Room> Create(Room room);
+    Task<IEnumerable<Room>> GetAll();
 }
