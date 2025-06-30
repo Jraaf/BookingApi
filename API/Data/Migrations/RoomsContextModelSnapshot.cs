@@ -22,7 +22,7 @@ namespace Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Data.Booking.BookingDao", b =>
+            modelBuilder.Entity("Data.Booking.Booking", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,7 +51,7 @@ namespace Data.Migrations
                     b.ToTable("Bookings");
                 });
 
-            modelBuilder.Entity("Data.Room.RoomDao", b =>
+            modelBuilder.Entity("Data.Room.Room", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -71,7 +71,7 @@ namespace Data.Migrations
                     b.ToTable("Rooms");
                 });
 
-            modelBuilder.Entity("Data.User.UserDao", b =>
+            modelBuilder.Entity("Data.User.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -96,15 +96,15 @@ namespace Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Data.Booking.BookingDao", b =>
+            modelBuilder.Entity("Data.Booking.Booking", b =>
                 {
-                    b.HasOne("Data.Room.RoomDao", "Room")
+                    b.HasOne("Data.Room.Room", "Room")
                         .WithMany("Bookings")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.User.UserDao", "User")
+                    b.HasOne("Data.User.User", "User")
                         .WithMany("Bookings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -115,12 +115,12 @@ namespace Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Data.Room.RoomDao", b =>
+            modelBuilder.Entity("Data.Room.Room", b =>
                 {
                     b.Navigation("Bookings");
                 });
 
-            modelBuilder.Entity("Data.User.UserDao", b =>
+            modelBuilder.Entity("Data.User.User", b =>
                 {
                     b.Navigation("Bookings");
                 });

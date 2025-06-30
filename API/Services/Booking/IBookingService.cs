@@ -8,4 +8,7 @@ namespace Services.Booking;
 
 public interface IBookingService
 {
+    Task<IEnumerable<BookingDto>> GetAll();
+    Task<BookingDto> Create(BookingDto booking);
+    Task<bool> Delete(int id);
 }

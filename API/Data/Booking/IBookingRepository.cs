@@ -11,4 +11,5 @@ public interface IBookingRepository
     Task<Booking> Create(Booking booking);
     Task<IEnumerable<Booking>> GetAll();
     Task<bool> Delete(int id);
+    Task<bool> IsAvailable(Booking booking);
 }

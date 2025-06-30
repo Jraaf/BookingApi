@@ -5,7 +5,6 @@ using Services.Room;
 
 namespace API.Room;
 
-[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class RoomsController : ControllerBase
@@ -20,6 +19,7 @@ public class RoomsController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAll()
     {
         var rooms = await _service.GetAll();
@@ -28,9 +28,10 @@ public class RoomsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] RoomDto room)
+    [Authorize]
+    public async Task<IActionResult> Create([FromBody] CreateRoomDto room)
     {
-        var createdRoom = await _service.Create(room);
+        var createdRoom = await _service.Create(_mapper.Map<RoomDto>(room));
         if (createdRoom == null)
         {
             throw new Exception("Room creation failed");

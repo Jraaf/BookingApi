@@ -32,7 +32,8 @@ public class UserService : IUserService
 
         var claims = new List<Claim>
         {
-            new (ClaimTypes.NameIdentifier, user.Username)
+            new (ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new (ClaimTypes.Name, user.Username)
         };
 
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);

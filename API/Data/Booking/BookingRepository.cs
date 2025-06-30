@@ -38,4 +38,18 @@ public class BookingRepository : IBookingRepository
             .Include(b => b.User)
             .ToListAsync();
     }
+
+    public async Task<bool> IsAvailable(Booking booking)
+    {
+        var startTime = booking.Date;
+        var endTime = booking.Date.Add(booking.Duration);
+
+        var isOverlap = await _context.Bookings
+            .Where(b => b.RoomId == booking.RoomId &&
+                    ((b.Date < endTime && b.Date.Add(b.Duration) > endTime) ||
+                     (b.Date > startTime && b.Date.Add(b.Duration) < startTime)))
+            .AnyAsync();
+
+        return !isOverlap;
+    }
 }
